@@ -5,15 +5,15 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-#include <node.h>
+#include "airport.h"
 using namespace std;
 
 class Edge {
-    Node* to;
+    Airport* to;
     double distance;
     double cost;
 
-    Edge(Node* dest, double d, double c);
+    Edge(Airport* dest, double d, double c);
 };
 
 #endif //EDGE_H
