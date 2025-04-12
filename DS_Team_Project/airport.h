@@ -2,8 +2,8 @@
 // Created by jenna on 4/12/2025.
 //
 
-#ifndef NODE_H
-#define NODE_H
+#ifndef AIRPORT_H
+#define AIRPORT_H
 
 #include <iostream>
 using namespace std;
@@ -15,4 +15,4 @@ class Airport {
     Airport(string n);
 };
 
-#endif //NODE_H
+#endif //AIRPORT_H
