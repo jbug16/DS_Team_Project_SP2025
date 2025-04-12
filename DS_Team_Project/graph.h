@@ -5,13 +5,16 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <iostream>
 #include <edge.h>
+#include <vector>
 using namespace std;
 
 class Graph {
-    Node nodes;
-    Edge edges;
+  private:
+    vector<Node> nodes;
+    vector<Edge> edges;
+  public:
+
 };
 
 #endif //GRAPH_H

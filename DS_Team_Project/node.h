@@ -12,7 +12,7 @@ class Node {
     int value;
     string name;
 
-    Node(string n) : name(n) {}
+    Node(string n);
 };
 
 #endif //NODE_H
