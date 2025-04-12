@@ -8,11 +8,11 @@
 #include <iostream>
 using namespace std;
 
-class Node {
+class Airport {
     int value;
     string name;
 
-    Node(string n);
+    Airport(string n);
 };
 
 #endif //NODE_H
