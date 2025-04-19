@@ -39,11 +39,10 @@ public:
     // Search functions
     void DFS(Airport& airport);
     void BFS(Airport& airport);
-    int dijkstra_shortest_path(const Airport& from_airport, const Airport& to_airport);
+    int dijkstraShortestPath(const Airport& fromAirport, const Airport& toAirport);
 
-    void clean_visited();
-    void DFS_helper(Airport& airport);
-    int get_vertex_index(const Airport& airport);
+    void cleanVisited();
+    void DFSHelper(Airport& airport);
 };
 
 #endif
