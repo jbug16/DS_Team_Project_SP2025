@@ -212,7 +212,7 @@ void Graph::printGraph() const
     }
 }
 
-vector<Flight *> Graph::getAllFlights() const
+vector<Flight*> Graph::getAllFlights() const
 {
     vector<Flight*> flights;
 
@@ -229,30 +229,38 @@ vector<Flight *> Graph::getAllFlights() const
     return flights;
 }
 
-void Graph::cleanVisited() const {
-    for (int i = 0; i < airportCount; i++) {
+void Graph::cleanVisited() const
+{
+    for (int i = 0; i < airportCount; i++)
+    {
         airports[i]->setVisited(false);
     }
 }
 
-int Graph::dijkstraShortestPath(const Airport &fromAirport, const Airport &toAirport)
+// Dijkstra functions
+DijkstraResult Graph::dijkstra(const Airport &fromAirport, const Airport &toAirport)
 {
-    // Function used from class (with some modifications)
+    // Base function used from canvas (with some modifications)
+    DijkstraResult result;
+
     int i_src = findAirportIndex(fromAirport.getName());
     int i_dest = findAirportIndex(toAirport.getName());
 
+    result.distances.resize(airportCount, INT_MAX);
+    result.costs.resize(airportCount, INT_MAX);
+    result.previous.resize(airportCount, -1);
+
+    // Airports do not exist
     if (i_src == -1 || i_dest == -1)
     {
         throw string("Shortest path: incorrect airports");
-        return -1;
+        return result;
     }
 
     cleanVisited();
-    vector<double> distances(airportCount, INT_MAX);
-    vector<double> costs(airportCount, INT_MAX);
-    vector<int> previous(airportCount, -1); // Store previous airport for indirect flights
-    distances[i_src] = 0;
-    costs[i_src] = 0;
+
+    result.distances[i_src] = 0;
+    result.costs[i_src] = 0;
 
     MinHeap<Flight*> heap;
     airports[i_src]->setVisited(true);
@@ -261,10 +269,13 @@ int Graph::dijkstraShortestPath(const Airport &fromAirport, const Airport &toAir
     Flight* current = adjList[i_src];
     while (current != nullptr)
     {
+        int destIndex = current->getDestination()->getIndex();
+
+        result.distances[destIndex] = current->getDistance();
+        result.costs[destIndex] = current->getCost();
+        result.previous[destIndex] = i_src;
+
         heap.insert(current);
-        distances[current->getDestination()->getIndex()] = current->getDistance();
-        costs[current->getDestination()->getIndex()] = current->getCost();
-        previous[current->getDestination()->getIndex()] = i_src;
         current = current->getNext();
     }
 
@@ -282,14 +293,14 @@ int Graph::dijkstraShortestPath(const Airport &fromAirport, const Airport &toAir
             while (neighbor != nullptr)
             {
                 int neighborIndex = neighbor->getDestination()->getIndex();
-                double newDist = distances[to] + neighbor->getDistance();
-                double newCost = costs[to] + neighbor->getCost();
+                double newDist = result.distances[to] + neighbor->getDistance();
+                double newCost = result.costs[to] + neighbor->getCost();
 
-                if (newDist < distances[neighborIndex])
+                if (newDist < result.distances[neighborIndex])
                 {
-                    distances[neighborIndex] = newDist;
-                    costs[neighborIndex] = newCost;
-                    previous[neighborIndex] = to; // track where previous node came from
+                    result.distances[neighborIndex] = newDist;
+                    result.costs[neighborIndex] = newCost;
+                    result.previous[neighborIndex] = to; // track where previous node came from
                     heap.insert(neighbor);
                 }
                 neighbor = neighbor->getNext();
@@ -298,12 +309,21 @@ int Graph::dijkstraShortestPath(const Airport &fromAirport, const Airport &toAir
     }
 
     cleanVisited();
+    return result;
+}
+
+void Graph::shortestPath(const Airport& fromAirport, const Airport& toAirport)
+{
+    // Get results from the dijkstra algorithm
+    DijkstraResult result = dijkstra(fromAirport, toAirport);
+
+    int i_dest = findAirportIndex(toAirport.getName()); // index of destination
 
     // No path found
-    if (distances[i_dest] == INT_MAX)
+    if (i_dest == -1 || result.distances[i_dest] == INT_MAX)
     {
         cout << "Shortest route from " << fromAirport.getName() << " to " << toAirport.getName() << ": None";
-        return -1;
+        return;
     }
 
     // Reconstruct path
@@ -312,7 +332,7 @@ int Graph::dijkstraShortestPath(const Airport &fromAirport, const Airport &toAir
     while (currentIndex != -1)
     {
         path.push_back(airports[currentIndex]->getName());
-        currentIndex = previous[currentIndex];
+        currentIndex = result.previous[currentIndex];
     }
 
     vector<string> reversedPath;
@@ -327,7 +347,5 @@ int Graph::dijkstraShortestPath(const Airport &fromAirport, const Airport &toAir
         cout << reversedPath[i];
         if (i < reversedPath.size() - 1) cout << " -> ";
     }
-    cout << ". The length is " << distances[i_dest] << ". The cost is " << costs[i_dest] << "." << endl;
-
-    return distances[i_dest];
+    cout << ". The length is " << result.distances[i_dest] << ". The cost is " << result.costs[i_dest] << "." << endl;
 }

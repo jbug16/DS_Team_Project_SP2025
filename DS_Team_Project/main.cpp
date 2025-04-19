@@ -37,7 +37,7 @@ int main()
     Airport* destinationAirport = graph.getAirportFromIndex(destinationIndex);
 
     // Run Dijkstra's algorithm
-    graph.dijkstraShortestPath(*originAirport, *destinationAirport);
+    graph.shortestPath(*originAirport, *destinationAirport);
 
     // ===================
     // TASK 3: Find all shortest paths from the origin airport to all airports in a given destination state
@@ -73,7 +73,7 @@ int main()
     // TASK 8: Generate a Minimum Spanning Tree using Kruskal’s algorithm
     // ===================
 
-    
+
 
     return 0;
 }

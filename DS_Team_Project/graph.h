@@ -8,7 +8,13 @@ class Airport;
 class Flight;
 using namespace std;
 
-const int MAX_AIRPORTS = 200;
+// Store the results if the Dijkstra algorithm
+struct DijkstraResult
+{
+    vector<double> distances; // distances of the flights
+    vector<double> costs; // costs of the flights
+    vector<int> previous; // the previous airport (this is for indirect flights ex. ATL -> JFK -> MCO)
+};
 
 class Graph
 {
@@ -38,11 +44,18 @@ public:
     // Function to collect all the flights into one list
     vector<Flight*> getAllFlights() const;
 
-    // Search functions
+    // Algorithm functions
     void DFS(Airport& airport);
     void BFS(Airport& airport);
-    int dijkstraShortestPath(const Airport& fromAirport, const Airport& toAirport);
+    // This is the dijkstra algorithm
+    // I've put it into its own function, so I can use it multiple times for each different task (when needed)
+    DijkstraResult dijkstra(const Airport& fromAirport, const Airport& toAirport);
 
+    // Shortest path functions
+    void shortestPath(const Airport& fromAirport, const Airport& toAirport);
+    void shortestPathsToState(const string& originCode, const string& stateCode);
+
+    // Helpers
     void cleanVisited() const;
     void DFSHelper(Airport& airport);
 };
