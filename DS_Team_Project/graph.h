@@ -20,8 +20,8 @@ public:
     Graph(); // default constructor
 
     // Functions to add airports (nodes) and flights (edges)
-    void addAirport(const string& name);
-    void addFlight(const string& from, const string& to, double distance, double cost);
+    void addAirport(const string& name, const string& city, const string& state);
+    void addFlight(const string& from, const string& fromCity, const string& fromState, const string& to, const string& toCity, const string& toState, double distance, double cost);
 
     // Lookup functions to check existing data
     int findAirportIndex(const string& name) const;

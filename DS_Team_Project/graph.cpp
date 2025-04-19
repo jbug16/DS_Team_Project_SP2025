@@ -12,14 +12,14 @@ Graph::Graph()
     airportCount = 0;
 }
 
-void Graph::addAirport(const string& name)
+void Graph::addAirport(const string& name, const string& city, const string& state)
 {
     // Check if the airport is already in the list
     if (!airportExists(name))
     {
         // If not,
         // Create the new airport
-        auto newAirport = new Airport(airportCount, name, false);
+        auto newAirport = new Airport(airportCount, name, city, state, false);
         // Add it to the list
         airports.push_back(newAirport);
         // Add an empty flight to the adjList
@@ -62,20 +62,20 @@ Airport* Graph::getAirportFromIndex(int index) const
     return airports[index];
 }
 
-void Graph::addFlight(const string& from, const string& to, double distance, double cost)
+void Graph::addFlight(const string& from, const string& fromCity, const string& fromState, const string& to, const string& toCity, const string& toState, double distance, double cost)
 {
     int fromIndex = findAirportIndex(from);
     int toIndex = findAirportIndex(to);
 
     if (fromIndex == -1)
     {
-        addAirport(from);
+        addAirport(from, fromCity, fromState);
         fromIndex = airportCount - 1;
     }
 
     if (toIndex == -1)
     {
-        addAirport(to);
+        addAirport(to, toCity, toState);
         toIndex = airportCount - 1;
     }
 
@@ -86,6 +86,18 @@ void Graph::addFlight(const string& from, const string& to, double distance, dou
     // Link into the beginning of the linked list
     newFlight->setNext(adjList[fromIndex]);
     adjList[fromIndex] = newFlight;
+}
+
+// Helper Trim function because C++ is mean and doesn't have one :(((
+string trim(const string& str)
+{
+    size_t start = 0;
+    while (start < str.length() && isspace(str[start])) start++;
+
+    size_t end = str.length();
+    while (end > start && isspace(str[end - 1])) end--;
+
+    return str.substr(start, end - start);
 }
 
 void Graph::buildGraph(const string& filename)
@@ -109,27 +121,39 @@ void Graph::buildGraph(const string& filename)
     while (getline(file, line))
     {
         stringstream ss(line);
-        string from_airport, to_airport, from_city, to_city, distanceStr, costStr;
+        string from_airport, to_airport;
+        string from_city, to_city, from_city_raw, to_city_raw;
+        string from_state, to_state;
+        string distanceStr, costStr;
 
         getline(ss, from_airport, ',');
         getline(ss, to_airport, ',');
 
-        // Handle quoted city fields that may contain commas
+        // Handle quoted city fields
         if (line.find('"') != string::npos)
         {
-            getline(ss, from_city, '"'); // skip up to first quote
-            getline(ss, from_city, '"'); // get quoted city
+            getline(ss, from_city_raw, '"'); // skip up to quote
+            getline(ss, from_city_raw, '"'); // get "City, ST"
             ss.ignore(1); // skip comma
 
-            getline(ss, to_city, '"'); // skip to quote
-            getline(ss, to_city, '"');
+            getline(ss, to_city_raw, '"');
+            getline(ss, to_city_raw, '"');
             ss.ignore(1); // skip comma
         }
         else
         {
-            getline(ss, from_city, ',');
-            getline(ss, to_city, ',');
+            getline(ss, from_city_raw, ',');
+            getline(ss, to_city_raw, ',');
         }
+
+        // Split by comma to get city and state
+        stringstream fromSplit(from_city_raw);
+        getline(fromSplit, from_city, ',');
+        getline(fromSplit, from_state);
+
+        stringstream toSplit(to_city_raw);
+        getline(toSplit, to_city, ',');
+        getline(toSplit, to_state);
 
         getline(ss, distanceStr, ',');
         getline(ss, costStr, ',');
@@ -139,12 +163,23 @@ void Graph::buildGraph(const string& filename)
             double distance = stod(distanceStr);
             double cost = stod(costStr);
 
+            stringstream fromSplit(from_city_raw);
+            getline(fromSplit, from_city, ',');
+            getline(fromSplit, from_state);
+            from_state = trim(from_state); // remove space
+
+            stringstream toSplit(to_city_raw);
+            getline(toSplit, to_city, ',');
+            getline(toSplit, to_state);
+            to_state = trim(to_state); // remove space
+
+
             // Add airports if not already added
-            if (!airportExists(from_airport)) addAirport(from_airport);
-            if (!airportExists(to_airport)) addAirport(to_airport);
+            if (!airportExists(from_airport)) addAirport(from_airport, from_city, from_state);
+            if (!airportExists(to_airport)) addAirport(to_airport, to_city, to_state);
 
             // Add the flight (edge)
-            addFlight(from_airport, to_airport, distance, cost);
+            addFlight(from_airport, from_city, from_state, to_airport, to_city, to_state, distance, cost);
         }
         catch (const invalid_argument& e)
         {
