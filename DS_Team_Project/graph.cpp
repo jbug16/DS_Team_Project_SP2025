@@ -1,6 +1,7 @@
 #include "graph.h"
 #include "airport.h"
 #include "flight.h"
+#include "minheap.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -54,6 +55,11 @@ int Graph::findAirportIndex(const string &name) const
         }
     }
     return -1;
+}
+
+Airport* Graph::getAirportFromIndex(int index) const
+{
+    return airports[index];
 }
 
 void Graph::addFlight(const string& from, const string& to, double distance, double cost)
@@ -186,4 +192,107 @@ vector<Flight *> Graph::getAllFlights() const
     }
 
     return flights;
+}
+
+void Graph::cleanVisited() const {
+    for (int i = 0; i < airportCount; i++) {
+        airports[i]->setVisited(false);
+    }
+}
+
+int Graph::dijkstraShortestPath(const Airport &fromAirport, const Airport &toAirport)
+{
+    // Function used from class (with some modifications)
+    int i_src = findAirportIndex(fromAirport.getName());
+    int i_dest = findAirportIndex(toAirport.getName());
+
+    if (i_src == -1 || i_dest == -1)
+    {
+        throw string("Shortest path: incorrect airports");
+        return -1;
+    }
+
+    cleanVisited();
+    vector<double> distances(airportCount, INT_MAX);
+    vector<double> costs(airportCount, INT_MAX);
+    vector<int> previous(airportCount, -1); // Store previous airport for indirect flights
+    distances[i_src] = 0;
+    costs[i_src] = 0;
+
+    MinHeap<Flight*> heap;
+    airports[i_src]->setVisited(true);
+
+    // Push all initial neighbors from the source
+    Flight* current = adjList[i_src];
+    while (current != nullptr)
+    {
+        heap.insert(current);
+        distances[current->getDestination()->getIndex()] = current->getDistance();
+        costs[current->getDestination()->getIndex()] = current->getCost();
+        previous[current->getDestination()->getIndex()] = i_src;
+        current = current->getNext();
+    }
+
+    while (!heap.empty())
+    {
+        Flight* f = heap.delete_min();
+        int from = f->fromIndex;
+        int to = f->getDestination()->getIndex();
+
+        if (!airports[to]->getVisited())
+        {
+            airports[to]->setVisited(true);
+
+            Flight* neighbor = adjList[to];
+            while (neighbor != nullptr)
+            {
+                int neighborIndex = neighbor->getDestination()->getIndex();
+                double newDist = distances[to] + neighbor->getDistance();
+                double newCost = costs[to] + neighbor->getCost();
+
+                if (newDist < distances[neighborIndex])
+                {
+                    distances[neighborIndex] = newDist;
+                    costs[neighborIndex] = newCost;
+                    previous[neighborIndex] = to; // track where previous node came from
+                    heap.insert(neighbor);
+                }
+                neighbor = neighbor->getNext();
+            }
+        }
+    }
+
+    cleanVisited();
+
+    // No path found
+    if (distances[i_dest] == INT_MAX)
+    {
+        cout << "Shortest route from " << fromAirport.getName() << " to " << toAirport.getName() << ": None";
+        return -1;
+    }
+
+    // Reconstruct path
+    vector<string> path;
+    int currentIndex = i_dest;
+    while (currentIndex != -1)
+    {
+        path.push_back(airports[currentIndex]->getName());
+        currentIndex = previous[currentIndex];
+    }
+
+    vector<string> reversedPath;
+    for (int i = path.size() - 1; i >= 0; i--)
+    {
+        reversedPath.push_back(path[i]);
+    }
+
+    // Print path
+    cout << "Shortest route from " << fromAirport.getName() << " to " << toAirport.getName() << ": ";
+    for (int i = 0; i < reversedPath.size(); i++) {
+        cout << reversedPath[i];
+        if (i < reversedPath.size() - 1) cout << " -> ";
+    }
+    cout << ". The length is " << distances[i_dest] << ". The cost is " << costs[i_dest] << "." << endl;
+
+    return distances[i_dest];
 }

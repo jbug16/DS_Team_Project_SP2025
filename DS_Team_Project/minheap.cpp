@@ -2,8 +2,11 @@
 // Created by jenna on 4/18/2025.
 //
 
-#include "MinHeap.h"
+#include "minheap.h"
 #include <iostream>
+using namespace std;
+
+class Flight;
 
 template<typename T>
 void MinHeap<T>::insert(const T& val) {
@@ -37,7 +40,7 @@ void MinHeap<T>::print() const {
 template<typename T>
 T MinHeap<T>::delete_min() {
     if (data.empty()) {
-        throw std::string("delete_min: Empty Heap\n");
+        throw string("delete_min: Empty Heap\n");
     }
     T res = data[0];
     data[0] = data[data.size() - 1]; //set the root with the value of the last node
@@ -88,14 +91,15 @@ void MinHeap<T>::percolate_down(int i) {
 template<typename T>
 int MinHeap<T>::min_index(int i1, int i2) const {
     if (i1 >= data.size() || i2 >= data.size() || i1 < 0 || i2 < 0) {
-        throw std::string ("min_index: incorrect index");
+        throw string ("min_index: incorrect index");
     }
 
     return (data[i1] < data[i2] ? i1 : i2);
 }
 
+template<typename T>
+bool MinHeap<T>::empty() const {
+    return data.empty();
+}
 
-// MinHeap(std::vector<T> v); {
-//     //insert the elements in the given order
-//     //heapify
-// }
+template class MinHeap<Flight*>;

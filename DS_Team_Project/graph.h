@@ -1,7 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <airport.h>
+#include "airport.h"
 #include <iostream>
 #include <vector>
 class Airport;
@@ -25,6 +25,8 @@ public:
 
     // Lookup functions to check existing data
     int findAirportIndex(const string& name) const;
+
+    Airport* getAirportFromIndex(int index) const;
     bool airportExists(const string& name) const;
 
     // Function to build the graph
@@ -41,7 +43,7 @@ public:
     void BFS(Airport& airport);
     int dijkstraShortestPath(const Airport& fromAirport, const Airport& toAirport);
 
-    void cleanVisited();
+    void cleanVisited() const;
     void DFSHelper(Airport& airport);
 };
 

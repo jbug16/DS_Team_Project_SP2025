@@ -4,19 +4,22 @@
 
 #ifndef MINHEAP_H
 #define MINHEAP_H
+
 #include <vector>
+using namespace std;
 
 template <typename T>
 class MinHeap {
 public:
     MinHeap() {}
-    MinHeap(std::vector<T> v);
+    MinHeap(vector<T> v);
     void insert(const T& val);
     void print() const;
     T delete_min();
+    bool empty() const;
 
 private:
-    std::vector<T> data;
+    vector<T> data;
     void swap(T& v1, T& v2) {
         T tmp = v1;
         v1 = v2;
