@@ -47,13 +47,11 @@ public:
     // Algorithm functions
     void DFS(Airport& airport);
     void BFS(Airport& airport);
-    // This is the dijkstra algorithm
-    // I've put it into its own function, so I can use it multiple times for each different task (when needed)
-    DijkstraResult dijkstra(const Airport& fromAirport, const Airport& toAirport);
+    DijkstraResult dijkstra(const Airport& fromAirport, const Airport& toAirport); // I've put it into its own function, so I can use it multiple times for each different task (when needed)
 
-    // Shortest path functions
-    void shortestPath(const Airport& fromAirport, const Airport& toAirport);
-    void shortestPathsToState(const string& originCode, const string& stateCode);
+    // Task functions
+    void shortestPath(const Airport& fromAirport, const Airport& toAirport); // TASK 2
+    void shortestPathsToState(const Airport& fromAirport, const string& toState); // TASK 3
 
     // Helpers
     void cleanVisited() const;

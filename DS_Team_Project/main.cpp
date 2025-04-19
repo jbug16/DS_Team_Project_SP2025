@@ -43,7 +43,7 @@ int main()
     // TASK 3: Find all shortest paths from the origin airport to all airports in a given destination state
     // ===================
 
-
+    graph.shortestPathsToState(*originAirport, "FL");
 
     // ===================
     // TASK 4: Find the shortest path between the origin and destination airport with a given number of stops

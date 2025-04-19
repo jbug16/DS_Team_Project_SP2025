@@ -343,9 +343,52 @@ void Graph::shortestPath(const Airport& fromAirport, const Airport& toAirport)
 
     // Print path
     cout << "Shortest route from " << fromAirport.getName() << " to " << toAirport.getName() << ": ";
-    for (int i = 0; i < reversedPath.size(); i++) {
+    for (int i = 0; i < reversedPath.size(); i++)
+    {
         cout << reversedPath[i];
         if (i < reversedPath.size() - 1) cout << " -> ";
     }
     cout << ". The length is " << result.distances[i_dest] << ". The cost is " << result.costs[i_dest] << "." << endl;
+}
+
+void Graph::shortestPathsToState(const Airport& fromAirport, const string& toState)
+{
+    DijkstraResult result = dijkstra(fromAirport, fromAirport); // destination param doesn't matter
+
+    cout << "Shortest paths from " << fromAirport.getName() << " to " << toState << " state airports are:\n\n";
+    cout << "Path\t\t\tLength\tCost" << endl;
+
+    for (int i = 0; i < airportCount; i++)
+    {
+        Airport* ap = airports[i];
+
+        // Skip if not in target state or not reachable
+        if (ap->getState() != toState || result.distances[i] == INT_MAX) continue;
+
+        // Reconstruct path
+        vector<string> path;
+        int currentIndex = i;
+        while (currentIndex != -1)
+        {
+            path.push_back(airports[currentIndex]->getName());
+            currentIndex = result.previous[currentIndex];
+        }
+
+        // Manually reverse path
+        vector<string> reversedPath;
+        for (int j = path.size() - 1; j >= 0; j--)
+        {
+            reversedPath.push_back(path[j]);
+        }
+
+        // Print path
+        for (int j = 0; j < reversedPath.size(); j++)
+        {
+            cout << reversedPath[j];
+            if (j < reversedPath.size() - 1) cout << " -> ";
+        }
+
+        // Print length and cost
+        cout << "\t" << result.distances[i] << "\t" << result.costs[i] << endl;
+    }
 }
