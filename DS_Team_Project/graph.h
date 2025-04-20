@@ -45,17 +45,17 @@ public:
     vector<Flight*> getAllFlights() const;
 
     // Algorithm functions
-    void DFS(Airport& airport);
+    void DFS(int currentIndex, int destIndex, int stopsRemaining, double currentDist, double currentCost, vector<string>& currentPath, double& bestDist, double& bestCost, vector<string>& bestPath);
     void BFS(Airport& airport);
     DijkstraResult dijkstra(const Airport& fromAirport, const Airport& toAirport); // I've put it into its own function, so I can use it multiple times for each different task (when needed)
 
     // Task functions
     void shortestPath(const Airport& fromAirport, const Airport& toAirport); // TASK 2
     void shortestPathsToState(const Airport& fromAirport, const string& toState); // TASK 3
+    void shortestPathsWithStops(const Airport& fromAirport, const Airport& toAirport, int stops);
 
     // Helpers
     void cleanVisited() const;
-    void DFSHelper(Airport& airport);
 };
 
 #endif

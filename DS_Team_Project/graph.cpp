@@ -392,3 +392,75 @@ void Graph::shortestPathsToState(const Airport& fromAirport, const string& toSta
         cout << "\t" << result.distances[i] << "\t" << result.costs[i] << endl;
     }
 }
+
+void Graph::DFS(int currentIndex, int destIndex, int stopsRemaining, double currentDist, double currentCost, vector<string> &currentPath, double &bestDist, double &bestCost, vector<string> &bestPath)
+{
+    currentPath.push_back(airports[currentIndex]->getName());
+
+    if (stopsRemaining == 0)
+    {
+        if (currentIndex == destIndex)
+        {
+            if (currentDist < bestDist)
+            {
+                bestDist = currentDist;
+                bestCost = currentCost;
+                bestPath = currentPath;
+            }
+        }
+
+        currentPath.pop_back();
+        return;
+    }
+
+    Flight* flight = adjList[currentIndex];
+    while (flight != nullptr)
+    {
+        int next = flight->getDestination()->getIndex();
+
+        DFS(next, destIndex, stopsRemaining - 1, currentDist + flight->getDistance(), currentCost + flight->getCost(), currentPath, bestDist, bestCost, bestPath);
+
+        flight = flight->getNext();
+    }
+
+    currentPath.pop_back();
+}
+
+
+void Graph::shortestPathsWithStops(const Airport& fromAirport, const Airport& toAirport, int stops)
+{
+    // We use DFS in this function!
+
+    int i_src = findAirportIndex(fromAirport.getName()); // index of source
+    int i_dest = findAirportIndex(toAirport.getName()); // index of destination
+
+    if (i_src == -1 || i_dest == -1)
+    {
+        cout << "Invalid airport code." << endl;
+        return;
+    }
+
+    vector<string> currentPath;
+    vector<string> bestPath;
+    double bestDist = INT_MAX;
+    double bestCost = INT_MAX;
+
+    DFS(i_src, i_dest, stops+1, 0, 0, currentPath, bestDist, bestCost, bestPath);
+
+    // Print path, distance and cost (if there is one with this many stops)
+    cout << "Shortest route from " << fromAirport.getName() << " to " << toAirport.getName() << " with " << stops << " stops: ";
+
+    if (bestPath.empty())
+    {
+        cout << "None" << endl;
+        return;
+    }
+
+    for (int i = 0; i < bestPath.size(); i++)
+    {
+        cout << bestPath[i];
+        if (i < bestPath.size() - 1) cout << " -> ";
+    }
+
+    cout << ". The length is " << bestDist << ". The cost is " << bestCost << "." << endl;
+}

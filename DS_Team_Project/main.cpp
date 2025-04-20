@@ -6,50 +6,45 @@ using namespace std;
 
 int main()
 {
-    // Define necessary variables
     const string path = "C:/Users/jenna/Desktop/school/SP25/DS_Team_Project_SP2025/DS_Team_Project/airports.csv";
     Graph graph;
-
 
     // ===================
     // TASK 1: Create graph from csv inputs
     // ===================
 
+    cout << "TASK 1" << endl;
     graph.buildGraph(path);
-    graph.printGraph();
+    cout << "Graph has been built." << endl;
+
+    // Needed for next tasks
+    string originCode = "IAD"; // this is the "from airport"
+    string destinationCode = "MIA"; // this is the "to airport"
+    int originIndex = graph.findAirportIndex(originCode); // index of the "from airport"
+    int destinationIndex = graph.findAirportIndex(destinationCode); // index of the "to airport"
+    Airport* originAirport = graph.getAirportFromIndex(originIndex); // from airport object
+    Airport* destinationAirport = graph.getAirportFromIndex(destinationIndex); // to airport object
 
     // ===================
     // TASK 2: Find the shortest path between two airports
     // ===================
 
-    string originCode = "IAD";
-    string destinationCode = "MIA";
-
-    // Look up airport indices
-    int originIndex = graph.findAirportIndex(originCode);
-    int destinationIndex = graph.findAirportIndex(destinationCode);
-
-    // Validate input
-    if (originIndex == -1 || destinationIndex == -1) { cout << "Error: One or both airport codes not found in the graph.\n"; return 1; }
-
-    // Retrieve Airport objects
-    Airport* originAirport = graph.getAirportFromIndex(originIndex);
-    Airport* destinationAirport = graph.getAirportFromIndex(destinationIndex);
-
-    // Run Dijkstra's algorithm
+    cout << "\nTASK 2" << endl;
     graph.shortestPath(*originAirport, *destinationAirport);
 
     // ===================
     // TASK 3: Find all shortest paths from the origin airport to all airports in a given destination state
     // ===================
 
+    cout << "\nTASK 3" << endl;
     graph.shortestPathsToState(*originAirport, "FL");
 
     // ===================
     // TASK 4: Find the shortest path between the origin and destination airport with a given number of stops
     // ===================
 
-
+    cout << "\nTASK 4" << endl;
+    graph.shortestPathsWithStops(*originAirport, *destinationAirport, 1);
 
     // ===================
     // TASK 5: Print the total number of direct flight connections to each airport
