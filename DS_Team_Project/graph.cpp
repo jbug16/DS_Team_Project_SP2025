@@ -1,4 +1,7 @@
 #include "graph.h"
+
+#include <algorithm>
+
 #include "airport.h"
 #include "flight.h"
 #include "minheap.h"
@@ -463,4 +466,53 @@ void Graph::shortestPathsWithStops(const Airport& fromAirport, const Airport& to
     }
 
     cout << ". The length is " << bestDist << ". The cost is " << bestCost << "." << endl;
+}
+
+void Graph::countDirectConnections()
+{
+    vector<pair<string, int>> airportConnections; // this stores the airport name and total connection count
+
+    // For each airport...
+    for (int i = 0; i < airportCount; i++)
+    {
+        int inbound = 0;
+        int outbound = 0;
+
+        // Count how many flights go into this airport
+        Flight* flight = adjList[i];
+        while (flight != nullptr)
+        {
+            outbound++;
+            flight = flight->getNext();
+        }
+
+        // Count how many flights it sends out
+        for (int j = 0; j < airportCount; j++)
+        {
+            if (j == i) continue; // skip itself
+
+            Flight* otherFlight = adjList[j];
+            while (otherFlight != nullptr)
+            {
+                if (otherFlight->getDestination()->getIndex() == i) inbound++; // checks if the flight goes to that airport index
+                otherFlight = otherFlight->getNext();
+            }
+        }
+
+        int totalCount = inbound + outbound;
+        airportConnections.push_back({airports[i]->getName(), totalCount}); // add connections to list
+    }
+
+    // Sort the list by connection count (descending order)
+    sort(airportConnections.begin(), airportConnections.end(),
+     [](pair<string, int>& a, pair<string, int>& b) {
+         return a.second > b.second;
+     });
+
+    // Print
+    cout << "Airport\t\tConnections" << endl;
+    for (int i = 0; i < airportConnections.size(); i++)
+    {
+        cout << airportConnections[i].first << "\t\t" << airportConnections[i].second << endl;
+    }
 }

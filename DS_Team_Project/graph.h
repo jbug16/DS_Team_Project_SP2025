@@ -53,6 +53,7 @@ public:
     void shortestPath(const Airport& fromAirport, const Airport& toAirport); // TASK 2
     void shortestPathsToState(const Airport& fromAirport, const string& toState); // TASK 3
     void shortestPathsWithStops(const Airport& fromAirport, const Airport& toAirport, int stops);
+    void countDirectConnections();
 
     // Helpers
     void cleanVisited() const;

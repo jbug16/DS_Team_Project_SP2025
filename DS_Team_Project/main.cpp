@@ -50,7 +50,8 @@ int main()
     // TASK 5: Print the total number of direct flight connections to each airport
     // ===================
 
-
+    cout << "\nTASK 5" << endl;
+    graph.countDirectConnections();
 
     // ===================
     // TASK 6: Create an undirected graph from the original directed graph
