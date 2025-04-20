@@ -468,7 +468,7 @@ void Graph::shortestPathsWithStops(const Airport& fromAirport, const Airport& to
     cout << ". The length is " << bestDist << ". The cost is " << bestCost << "." << endl;
 }
 
-void Graph::countDirectConnections()
+void Graph::countDirectConnections() const
 {
     vector<pair<string, int>> airportConnections; // this stores the airport name and total connection count
 

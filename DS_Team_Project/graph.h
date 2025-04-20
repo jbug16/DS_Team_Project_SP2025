@@ -52,8 +52,8 @@ public:
     // Task functions
     void shortestPath(const Airport& fromAirport, const Airport& toAirport); // TASK 2
     void shortestPathsToState(const Airport& fromAirport, const string& toState); // TASK 3
-    void shortestPathsWithStops(const Airport& fromAirport, const Airport& toAirport, int stops);
-    void countDirectConnections();
+    void shortestPathsWithStops(const Airport& fromAirport, const Airport& toAirport, int stops); // TASK 4
+    void countDirectConnections() const; // TASK 5
 
     // Helpers
     void cleanVisited() const;
