@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <climits> //
 using namespace std;
 
 Graph::Graph()
@@ -22,7 +23,7 @@ void Graph::addAirport(const string& name, const string& city, const string& sta
     {
         // If not,
         // Create the new airport
-        auto newAirport = new Airport(airportCount, name, city, state, false);
+        auto newAirport = new Airport(airportCount, name, city, state, false); //false
         // Add it to the list
         airports.push_back(newAirport);
         // Add an empty flight to the adjList
@@ -198,10 +199,10 @@ void Graph::buildUndirectedGraph()
 {
     cout << "Building undirected graph..." << endl;
 
-    // Map to store unique undirected edge pairs and all flights between them
-    map<pair<int, int>, vector<Flight*>> edgeMap;
+    // Each entry holds an undirected edge (u, v) and all flights between them
+    vector<pair<pair<int, int>, vector<Flight*>>> edgeList;
 
-    // Gather all flights into the map using (min, max) index as key
+    // Step 1: Gather all directed edges into edgeList
     for (int i = 0; i < airportCount; i++)
     {
         Flight* current = adjList[i];
@@ -209,21 +210,38 @@ void Graph::buildUndirectedGraph()
         {
             int from = current->fromIndex;
             int to = current->getDestination()->getIndex();
-            pair<int, int> key = {min(from, to), max(from, to)};
-            edgeMap[key].push_back(current);
+            pair<int, int> key = {min(from, to), max(from, to)}; // undirected key
+
+            // Search if the edge already exists in edgeList
+            bool found = false;
+            for (auto& entry : edgeList)
+            {
+                if (entry.first == key)
+                {
+                    entry.second.push_back(current);
+                    found = true;
+                    break;
+                }
+            }
+
+            // If not found, add a new entry
+            if (!found)
+            {
+                edgeList.push_back({key, {current}});
+            }
 
             current = current->getNext();
         }
     }
 
-    // Clear existing adjacency list
+    // Step 2: Clear original adjacency list
     for (int i = 0; i < airportCount; i++)
     {
         adjList[i] = nullptr;
     }
 
-    // Rebuild the adjacency list with undirected edges
-    for (const auto& entry : edgeMap)
+    // Step 3: Rebuild adjList as undirected
+    for (const auto& entry : edgeList)
     {
         int u = entry.first.first;
         int v = entry.first.second;
@@ -255,6 +273,7 @@ void Graph::buildUndirectedGraph()
         adjList[v] = vu;
     }
 }
+
 
 
 void Graph::printGraph() const
