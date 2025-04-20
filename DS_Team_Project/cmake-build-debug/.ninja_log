@@ -1,0 +1,15 @@
+# ninja log v6
+64	4560	7668737324552458	CMakeFiles/DS_Team_Project.dir/graph.cpp.obj	66471f228ac65a19
+3	14	7665581971906455	clean	18985f9f00b1b1db
+4561	5180	7668737369522431	DS_Team_Project.exe	f401448918249c1d
+25	424	7668032178306250	CMakeFiles/DS_Team_Project.dir/airport.cpp.obj	6b38d7e6a0861f1e
+22	399	7668241957425336	CMakeFiles/DS_Team_Project.dir/main.cpp.obj	ce8dde3f84c19f91
+31	730	7668921886181735	build.ninja	838ff8450955a9ed
+29	410	7668032178346263	CMakeFiles/DS_Team_Project.dir/flight.cpp.obj	62e56fd92b77a31f
+18	384	7667990439021668	CMakeFiles/DS_Team_Project.dir/minheap.cpp.obj	1c507e7cb45407a3
+28	1021	7668924718031810	CMakeFiles/DS_Team_Project.dir/flight.cpp.obj	62e56fd92b77a31f
+18	1085	7668924717921805	CMakeFiles/DS_Team_Project.dir/airport.cpp.obj	6b38d7e6a0861f1e
+39	1188	7668924718131809	CMakeFiles/DS_Team_Project.dir/main.cpp.obj	ce8dde3f84c19f91
+10	1355	7668924717842201	CMakeFiles/DS_Team_Project.dir/minheap.cpp.obj	1c507e7cb45407a3
+34	2193	7668924718081810	CMakeFiles/DS_Team_Project.dir/graph.cpp.obj	66471f228ac65a19
+2193	2585	7668924739678316	DS_Team_Project.exe	f401448918249c1d

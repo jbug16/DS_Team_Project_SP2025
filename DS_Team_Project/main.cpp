@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    const string path = "C:/Users/jenna/Desktop/school/SP25/DS_Team_Project_SP2025/DS_Team_Project/airports.csv";
+    const string path = "C:/Users/jenna/Desktop/school/SP25/DS_Team_Project_SP2025/DS_Team_Project/airports.txt";
     Graph graph;
 
     // ===================
