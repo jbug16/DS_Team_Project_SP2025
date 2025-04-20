@@ -56,7 +56,9 @@ int main()
     // ===================
     // TASK 6: Create an undirected graph from the original directed graph
     // ===================
-
+    cout << "\nTASK 6" << endl;;
+    graph.buildUndirectedGraph();
+    cout << "Undirected Graph has been built." << endl;
 
 
     // ===================

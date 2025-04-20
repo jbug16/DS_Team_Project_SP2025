@@ -37,6 +37,9 @@ public:
 
     // Function to build the graph
     void buildGraph(const string& filename);
+    
+    //Function to built the undirected graph
+    void buildUndirectedGraph();
 
     // Function to output the graph
     void printGraph() const;

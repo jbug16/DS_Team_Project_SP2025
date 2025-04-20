@@ -194,6 +194,69 @@ void Graph::buildGraph(const string& filename)
     file.close();
 }
 
+void Graph::buildUndirectedGraph()
+{
+    cout << "Building undirected graph..." << endl;
+
+    // Map to store unique undirected edge pairs and all flights between them
+    map<pair<int, int>, vector<Flight*>> edgeMap;
+
+    // Gather all flights into the map using (min, max) index as key
+    for (int i = 0; i < airportCount; i++)
+    {
+        Flight* current = adjList[i];
+        while (current != nullptr)
+        {
+            int from = current->fromIndex;
+            int to = current->getDestination()->getIndex();
+            pair<int, int> key = {min(from, to), max(from, to)};
+            edgeMap[key].push_back(current);
+
+            current = current->getNext();
+        }
+    }
+
+    // Clear existing adjacency list
+    for (int i = 0; i < airportCount; i++)
+    {
+        adjList[i] = nullptr;
+    }
+
+    // Rebuild the adjacency list with undirected edges
+    for (const auto& entry : edgeMap)
+    {
+        int u = entry.first.first;
+        int v = entry.first.second;
+        const vector<Flight*>& flights = entry.second;
+
+        // Find the flight with the minimum cost
+        Flight* best = flights[0];
+        for (Flight* f : flights)
+        {
+            if (f->getCost() < best->getCost())
+            {
+                best = f;
+            }
+        }
+
+        Airport* uAirport = airports[u];
+        Airport* vAirport = airports[v];
+
+        // Add flight u -> v
+        Flight* uv = new Flight(vAirport, best->getDistance(), best->getCost());
+        uv->fromIndex = u;
+        uv->setNext(adjList[u]);
+        adjList[u] = uv;
+
+        // Add flight v -> u
+        Flight* vu = new Flight(uAirport, best->getDistance(), best->getCost());
+        vu->fromIndex = v;
+        vu->setNext(adjList[v]);
+        adjList[v] = vu;
+    }
+}
+
+
 void Graph::printGraph() const
 {
     cout << "Flight Graph:\n";
