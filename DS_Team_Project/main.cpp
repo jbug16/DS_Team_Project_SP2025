@@ -6,7 +6,7 @@ using namespace std;
 
 int main()
 {
-    const string path = "C:/Users/jenna/Desktop/school/SP25/DS_Team_Project_SP2025/DS_Team_Project/airports.txt";
+    const string path = "airports.txt";
     Graph graph;
 
     // ===================
@@ -18,8 +18,8 @@ int main()
     cout << "Graph has been built." << endl;
 
     // Needed for next tasks
-    string originCode = "IAD"; // this is the "from airport"
-    string destinationCode = "MIA"; // this is the "to airport"
+    string originCode = "PIT"; // this is the "from airport"
+    string destinationCode = "ACT"; // this is the "to airport"
     int originIndex = graph.findAirportIndex(originCode); // index of the "from airport"
     int destinationIndex = graph.findAirportIndex(destinationCode); // index of the "to airport"
     Airport* originAirport = graph.getAirportFromIndex(originIndex); // from airport object
@@ -44,7 +44,7 @@ int main()
     // ===================
 
     cout << "\nTASK 4" << endl;
-    graph.shortestPathsWithStops(*originAirport, *destinationAirport, 1);
+    graph.shortestPathsWithStops(*originAirport, *destinationAirport, 2);
 
     // ===================
     // TASK 5: Print the total number of direct flight connections to each airport
