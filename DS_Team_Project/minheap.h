@@ -1,7 +1,3 @@
-//
-// Created by jenna on 4/18/2025.
-//
-
 #ifndef MINHEAP_H
 #define MINHEAP_H
 

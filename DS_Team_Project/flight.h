@@ -1,7 +1,3 @@
-//
-// Created by jenna on 4/12/2025.
-//
-
 #ifndef FLIGHT_H
 #define FLIGHT_H
 

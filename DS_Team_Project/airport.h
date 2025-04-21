@@ -1,7 +1,3 @@
-//
-// Created by jenna on 4/12/2025.
-//
-
 #ifndef AIRPORT_H
 #define AIRPORT_H
 

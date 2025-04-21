@@ -1,7 +1,3 @@
-//
-// Created by jenna on 4/18/2025.
-//
-
 #include "minheap.h"
 #include <iostream>
 using namespace std;
