@@ -457,6 +457,20 @@ void Graph::prim()
     cout << "Total cost of MST: " << totalCost << endl;
 }
 
+// Helpers for Kruskal's
+int find(int parent[], int i) {
+    while (i != parent[i]) i = parent[i];
+    return i;
+}
+
+bool unionSets(int parent[], int a, int b) {
+    int rootA = find(parent, a);
+    int rootB = find(parent, b);
+    if (rootA == rootB) return false;
+    parent[rootB] = rootA;
+    return true;
+}
+
 void Graph::kruskal()
 {
     vector<Flight *> edgeList = getAllFlights();
@@ -472,7 +486,35 @@ void Graph::kruskal()
     int parent[200];
     for (int i = 0; i < airportCount; i++) parent[i] = i;
 
+    vector<Flight*> mst;
+    double totalCost = 0;
 
+    cout << "Minimal Spanning Tree:\n";
+    cout << "Edge\t\tWeight\n";
+
+    for (int i = 0; i < edgeList.size(); i++)
+    {
+        Flight* edge = edgeList[i];
+        int u = edge->fromIndex;
+        int v = edge->getDestination()->getIndex();
+        double wt = edge->getCost();
+
+        if (unionSets(parent, u, v))
+        {
+            mst.push_back(edge);
+            totalCost += wt;
+
+            cout << airports[u]->getName() << " - " << airports[v]->getName() << "\t" << wt << endl;
+        }
+    }
+
+    if (mst.size() < airportCount - 1)
+    {
+        cout << "Graph is disconnected. MST cannot be formed." << endl;
+        return;
+    }
+
+    cout << "Total cost of MST: " << totalCost << endl;
 }
 
 void Graph::shortestPath(const Airport& fromAirport, const Airport& toAirport)
