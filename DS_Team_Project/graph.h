@@ -51,6 +51,8 @@ public:
     void DFS(int currentIndex, int destIndex, int stopsRemaining, double currentDist, double currentCost, vector<string>& currentPath, double& bestDist, double& bestCost, vector<string>& bestPath);
     void BFS(Airport& airport);
     DijkstraResult dijkstra(const Airport& fromAirport, const Airport& toAirport); // I've put it into its own function, so I can use it multiple times for each different task (when needed)
+    void prim();
+    void kruskal();
 
     // Task functions
     void shortestPath(const Airport& fromAirport, const Airport& toAirport); // TASK 2

@@ -397,6 +397,84 @@ DijkstraResult Graph::dijkstra(const Airport &fromAirport, const Airport &toAirp
     return result;
 }
 
+// Prim functions
+void Graph::prim()
+{
+    // Imported from canvas, made a few changes
+    bool inMST[200] = {false};
+    double totalCost = 0;
+
+    // priority queue (min-heap): Flight* by cost
+    MinHeap<Flight*> heap;
+
+    // Start from vertex 0
+    Flight* start = adjList[0];
+    while (start != nullptr) {
+        heap.insert(start);
+        start = start->getNext();
+    }
+
+    cout << "Minimal Spanning Tree:\n";
+    cout << "Edge\t\tWeight\n";
+
+    while (!heap.empty()) {
+        Flight* edge = heap.delete_min();
+        int u = edge->fromIndex;
+        int v = edge->getDestination()->getIndex();
+        double wt = edge->getCost();
+
+        // Skip if already included in MST
+        if (inMST[v])
+            continue;
+
+        inMST[v] = true;
+        totalCost += wt;
+
+        // Don't print the starting node with weight 0
+        cout << airports[u]->getName() << " - " << airports[v]->getName()
+             << "\t" << wt << endl;
+
+        // Go through all neighbors
+        Flight* neighbor = adjList[v];
+        while (neighbor != nullptr) {
+            int dest = neighbor->getDestination()->getIndex();
+            if (!inMST[dest])
+                heap.insert(neighbor);
+            neighbor = neighbor->getNext();
+        }
+    }
+
+    // If the graph is disconnected
+    int count = 0;
+    for (int i = 0; i < airportCount; i++) if (inMST[i]) count++;
+
+    if (count < airportCount)
+    {
+        cout << "Graph is disconnected. MST cannot be formed." << endl;
+        return;
+    }
+
+    cout << "Total cost of MST: " << totalCost << endl;
+}
+
+void Graph::kruskal()
+{
+    vector<Flight *> edgeList = getAllFlights();
+
+    // Sort the list by count (ascending order)
+    sort(edgeList.begin(), edgeList.end(),
+     [](Flight* a, Flight* b)
+     {
+         return a->getCost() < b->getCost();
+     });
+
+    // Set up union-find
+    int parent[200];
+    for (int i = 0; i < airportCount; i++) parent[i] = i;
+
+
+}
+
 void Graph::shortestPath(const Airport& fromAirport, const Airport& toAirport)
 {
     // Get results from the dijkstra algorithm

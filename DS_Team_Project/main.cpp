@@ -56,7 +56,7 @@ int main()
     // ===================
     // TASK 6: Create an undirected graph from the original directed graph
     // ===================
-    cout << "\nTASK 6" << endl;;
+    cout << "\nTASK 6" << endl;
     graph.buildUndirectedGraph();
     cout << "Undirected Graph has been built." << endl;
 
@@ -65,7 +65,8 @@ int main()
     // TASK 7: Generate a Minimum Spanning Tree using Prim’s algorithm
     // ===================
 
-
+    cout << "\nTASK 7" << endl;
+    graph.prim();
 
     // ===================
     // TASK 8: Generate a Minimum Spanning Tree using Kruskal’s algorithm
